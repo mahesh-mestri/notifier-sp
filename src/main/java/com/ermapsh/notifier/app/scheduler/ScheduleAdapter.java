@@ -1,12 +1,12 @@
 package com.ermapsh.notifier.app.scheduler;
 
+import com.ermapsh.notifier.app.dto.req.ReminderScheduleRequest;
 import com.ermapsh.notifier.app.entity.Reminder;
+import com.ermapsh.notifier.app.entity.Schedule;
 
 import java.time.Instant;
 import java.util.List;
 
 public interface ScheduleAdapter {
-
-    List<Instant> generate(Reminder reminder, Instant from, Instant until);
-
+    Schedule create(Reminder reminder, ReminderScheduleRequest schedule);
 }

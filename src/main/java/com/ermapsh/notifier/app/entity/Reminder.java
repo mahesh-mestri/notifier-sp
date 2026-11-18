@@ -2,10 +2,9 @@ package com.ermapsh.notifier.app.entity;
 
 import com.ermapsh.notifier.app.enums.ReminderCategory;
 import com.ermapsh.notifier.app.enums.ReminderScheduleType;
+import com.ermapsh.notifier.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.Instant;
 import java.util.UUID;
 
 @Entity
@@ -21,7 +20,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Reminder {
+public class Reminder extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -52,22 +51,4 @@ public class Reminder {
     @Column(nullable = false)
     @Builder.Default
     private boolean active = true;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private Instant createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    private Instant updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        Instant now = Instant.now();
-        createdAt = now;
-        updatedAt = now;
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = Instant.now();
-    }
 }

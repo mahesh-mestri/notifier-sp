@@ -1,9 +1,14 @@
 
 package com.ermapsh.notifier.app.scheduler;
 
+import com.ermapsh.notifier.app.dto.req.ReminderScheduleRequest;
+import com.ermapsh.notifier.app.dto.res.ReminderResponse;
 import com.ermapsh.notifier.app.entity.Reminder;
+import com.ermapsh.notifier.app.entity.Schedule;
 import com.ermapsh.notifier.app.enums.ReminderScheduleType;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,28 +25,17 @@ public class ScheduleAdapterRouter {
 
     private final Map<ReminderScheduleType, ScheduleAdapter> scheduleAdapters;
 
-    public List<Instant> generate(
-            Reminder reminder,
-            Instant from,
-            Instant until
-    ) {
+    public Schedule create(Reminder reminder, ReminderScheduleRequest schedule) {
+        ReminderScheduleType type = reminder.getScheduleType();
 
-        ReminderScheduleType scheduleType = reminder.getScheduleType();
-
-        log.info(
-                "Generating occurrences for reminder: {}, schedule type: {}",
-                reminder.getId(),
-                scheduleType
-        );
-
-        ScheduleAdapter adapter = scheduleAdapters.get(scheduleType);
+        ScheduleAdapter adapter = scheduleAdapters.get(type);
 
         if (adapter == null) {
             throw new IllegalArgumentException(
-                    "No schedule adapter registered for type: " + scheduleType
+                    "No schedule adapter registered for: " + type
             );
         }
 
-        return adapter.generate(reminder, from, until);
+        return adapter.create(reminder, schedule);
     }
 }
