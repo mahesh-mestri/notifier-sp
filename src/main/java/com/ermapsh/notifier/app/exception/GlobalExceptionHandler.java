@@ -1,6 +1,7 @@
 package com.ermapsh.notifier.app.exception;
 
 import com.ermapsh.notifier.common.dto.res.ApiResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateResourceException.class)
@@ -53,14 +55,23 @@ public class GlobalExceptionHandler {
         ));
     }
 
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ApiResponse<?>> handleEmptyBody(
+    public ResponseEntity<ApiResponse<?>> handleHttpMessageNotReadable(
             HttpMessageNotReadableException ex) {
+
+        log.error("Request deserialization failed", ex);
+
+        String message = ex.getMostSpecificCause().getMessage();
+
+        if (message == null) {
+            message = "Invalid request body";
+        }
 
         return ResponseEntity.badRequest().body(
                 new ApiResponse<>(
                         HttpStatus.BAD_REQUEST.value(),
-                        "Request body is required",
+                        message,
                         null,
                         null
                 )
