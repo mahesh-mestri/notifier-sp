@@ -24,7 +24,7 @@ public class WebSecurityConfig {
             "/api/v1/auth/refresh-token",
             "/webhook/**"
     };
-    private static final String[] JWT_ROUTES = {"/api/v1/user/**", "/api/v1/order/**", "/api/v1/payment/**", "/api/v1/subscription/**", "/actuator/**", "/webhook/**"};
+    private static final String[] JWT_ROUTES = {"/api/v1/user/**", "/api/v1/order/**", "/api/v1/payment/**", "/api/v1/subscription/**", "/api/v1/subscription/**", "/actuator/**", "/webhook/**"};
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
