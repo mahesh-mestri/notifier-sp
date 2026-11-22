@@ -4,12 +4,16 @@ import com.ermapsh.notifier.app.dto.req.IntervalScheduleRequest;
 import com.ermapsh.notifier.app.dto.req.ReminderScheduleRequest;
 import com.ermapsh.notifier.app.entity.IntervalSchedule;
 import com.ermapsh.notifier.app.entity.Reminder;
+import com.ermapsh.notifier.app.entity.ReminderOccurrence;
 import com.ermapsh.notifier.app.entity.Schedule;
 import com.ermapsh.notifier.app.repository.IntervalScheduleRepository;
 import com.ermapsh.notifier.app.scheduler.ScheduleAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.time.Instant;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -41,5 +45,10 @@ public class IntervalScheduleAdapter implements ScheduleAdapter {
                 .build();
 
         return intervalScheduleRepository.save(intervalSchedule);
+    }
+
+    @Override
+    public List<ReminderOccurrence> generateOccurrences(Reminder reminder, Schedule schedule, Instant from, Instant until) {
+        return List.of();
     }
 }

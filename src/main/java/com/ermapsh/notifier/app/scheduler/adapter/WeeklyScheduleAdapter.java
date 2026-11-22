@@ -3,6 +3,7 @@ package com.ermapsh.notifier.app.scheduler.adapter;
 import com.ermapsh.notifier.app.dto.req.ReminderScheduleRequest;
 import com.ermapsh.notifier.app.dto.req.WeeklyScheduleRequest;
 import com.ermapsh.notifier.app.entity.Reminder;
+import com.ermapsh.notifier.app.entity.ReminderOccurrence;
 import com.ermapsh.notifier.app.entity.Schedule;
 import com.ermapsh.notifier.app.entity.WeeklySchedule;
 import com.ermapsh.notifier.app.repository.WeeklyScheduleRepository;
@@ -10,6 +11,9 @@ import com.ermapsh.notifier.app.scheduler.ScheduleAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.time.Instant;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -39,5 +43,10 @@ public class WeeklyScheduleAdapter implements ScheduleAdapter {
                 .build();
 
         return weeklyScheduleRepository.save(weeklySchedule);
+    }
+
+    @Override
+    public List<ReminderOccurrence> generateOccurrences(Reminder reminder, Schedule schedule, Instant from, Instant until) {
+        return List.of();
     }
 }

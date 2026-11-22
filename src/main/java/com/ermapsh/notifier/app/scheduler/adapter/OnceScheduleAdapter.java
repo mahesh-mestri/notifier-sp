@@ -4,12 +4,16 @@ import com.ermapsh.notifier.app.dto.req.OnceScheduleRequest;
 import com.ermapsh.notifier.app.dto.req.ReminderScheduleRequest;
 import com.ermapsh.notifier.app.entity.OnceSchedule;
 import com.ermapsh.notifier.app.entity.Reminder;
+import com.ermapsh.notifier.app.entity.ReminderOccurrence;
 import com.ermapsh.notifier.app.entity.Schedule;
 import com.ermapsh.notifier.app.repository.OnceScheduleRepository;
 import com.ermapsh.notifier.app.scheduler.ScheduleAdapter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import java.time.Instant;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -39,5 +43,10 @@ public class OnceScheduleAdapter implements ScheduleAdapter {
                 .build();
 
         return onceScheduleRepository.save(onceSchedule);
+    }
+
+    @Override
+    public List<ReminderOccurrence> generateOccurrences(Reminder reminder, Schedule schedule, Instant from, Instant until) {
+        return List.of();
     }
 }
