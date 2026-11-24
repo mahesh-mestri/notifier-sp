@@ -7,6 +7,7 @@ import com.ermapsh.notifier.app.entity.Schedule;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 public interface ScheduleAdapter {
 
@@ -15,10 +16,10 @@ public interface ScheduleAdapter {
             ReminderScheduleRequest schedule
     );
 
-    List<ReminderOccurrence> generateOccurrences(
+    List<ReminderOccurrence> arrangeReminderOccurrence(
             Reminder reminder,
-            Schedule schedule,
-            Instant from,
-            Instant until
+            Schedule schedule
     );
+
+    Schedule findByReminderId(Reminder reminder);
 }

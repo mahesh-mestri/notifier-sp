@@ -21,7 +21,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ReminderServiceImpl  implements ReminderService {
+public class ReminderServiceImpl implements ReminderService {
 
     private final ReminderRepository reminderRepository;
     private final UserRepository userRepository;
@@ -37,6 +37,15 @@ public class ReminderServiceImpl  implements ReminderService {
                 .orElseThrow(() ->
                         new ResourceNotFoundException("User not found for ID: " + userId)
                 );
+
+        if (reminderRepository.existsByUserIdAndTitleIgnoreCaseAndActiveTrue(
+                userId,
+                request.title()
+        )) {
+            throw new IllegalArgumentException(
+                    "You already have an active reminder with this title"
+            );
+        }
 
         Reminder reminder = Reminder.builder().
                 user(user).

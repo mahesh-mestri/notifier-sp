@@ -6,6 +6,7 @@ import com.ermapsh.notifier.app.entity.OnceSchedule;
 import com.ermapsh.notifier.app.entity.Reminder;
 import com.ermapsh.notifier.app.entity.ReminderOccurrence;
 import com.ermapsh.notifier.app.entity.Schedule;
+import com.ermapsh.notifier.app.enums.OccurrenceStatus;
 import com.ermapsh.notifier.app.repository.OnceScheduleRepository;
 import com.ermapsh.notifier.app.scheduler.ScheduleAdapter;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
+import java.time.ZoneId;
 import java.util.List;
 
 @Component
@@ -46,7 +48,42 @@ public class OnceScheduleAdapter implements ScheduleAdapter {
     }
 
     @Override
-    public List<ReminderOccurrence> generateOccurrences(Reminder reminder, Schedule schedule, Instant from, Instant until) {
-        return List.of();
+    public List<ReminderOccurrence> arrangeReminderOccurrence(
+            Reminder reminder,
+            Schedule schedule
+    ) {
+        if (!(schedule instanceof OnceSchedule onceSchedule)) {
+            throw new IllegalArgumentException(
+                    "Invalid schedule configuration for ONCE reminder"
+            );
+        }
+
+        Instant scheduledAt = onceSchedule.getReminderDate()
+                .atTime(onceSchedule.getReminderTime())
+                .atZone(ZoneId.of(onceSchedule.getTimeZone()))
+                .toInstant();
+
+        if (!scheduledAt.isAfter(Instant.now())) {
+            return List.of();
+        }
+
+        return List.of(
+                ReminderOccurrence.builder()
+                        .reminder(reminder)
+                        .scheduledAt(scheduledAt)
+                        .status(OccurrenceStatus.PENDING)
+                        .build()
+        );
+    }
+
+
+    @Override
+    public Schedule findByReminderId(Reminder reminder) {
+        return onceScheduleRepository
+                .findByReminderId(reminder.getId())
+                .orElseThrow(() -> new IllegalStateException(
+                        "Once schedule not found for reminder: "
+                                + reminder.getId()
+                ));
     }
 }
