@@ -1,7 +1,6 @@
 package com.ermapsh.notifier.app.operations;
 
 import com.ermapsh.notifier.app.repository.ReminderRepository;
-import com.ermapsh.notifier.app.scheduler.ScheduleAdapterRouter;
 import com.ermapsh.notifier.app.service.ReminderOccurrenceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,11 +14,15 @@ public class OccurrenceScheduler {
     private final ReminderRepository reminderRepository;
 
     private final ReminderOccurrenceService  reminderOccurrenceService;
-    private final ScheduleAdapterRouter scheduleAdapterRouter;
-
+    private final ReminderOccurrenceToOutboxEventProcessor occurrenceToOutboxEventProcessor;
     //    @Scheduled(fixedDelay = 300000 )
-    @Scheduled(fixedDelay = 3000)
+    @Scheduled(fixedDelay = 1000)
     public void generateUpcomingOccurrences() {
         reminderOccurrenceService.generateUpcomingOccurrences();
+    }
+
+    @Scheduled(fixedDelay = 1000)
+    public void occurrencesToOutboxEvent() {
+        occurrenceToOutboxEventProcessor.occurrencesToOutboxEvent();
     }
 }

@@ -38,14 +38,14 @@ public class ReminderServiceImpl implements ReminderService {
                         new ResourceNotFoundException("User not found for ID: " + userId)
                 );
 
-        if (reminderRepository.existsByUserIdAndTitleIgnoreCaseAndActiveTrue(
-                userId,
-                request.title()
-        )) {
-            throw new IllegalArgumentException(
-                    "You already have an active reminder with this title"
-            );
-        }
+//        if (reminderRepository.existsByUserIdAndTitleIgnoreCaseAndActiveTrue(
+//                userId,
+//                request.title()
+//        )) {
+//            throw new IllegalArgumentException(
+//                    "You already have an active reminder with this title"
+//            );
+//        }
 
         Reminder reminder = Reminder.builder().
                 user(user).

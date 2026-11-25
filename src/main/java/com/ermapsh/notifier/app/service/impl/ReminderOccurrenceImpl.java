@@ -3,6 +3,7 @@ package com.ermapsh.notifier.app.service.impl;
 import com.ermapsh.notifier.app.entity.Reminder;
 import com.ermapsh.notifier.app.entity.ReminderOccurrence;
 import com.ermapsh.notifier.app.entity.Schedule;
+import com.ermapsh.notifier.app.enums.OccurrenceStatus;
 import com.ermapsh.notifier.app.repository.ReminderOccurrenceRepository;
 import com.ermapsh.notifier.app.repository.ReminderRepository;
 import com.ermapsh.notifier.app.scheduler.ScheduleAdapter;
@@ -13,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -69,5 +72,18 @@ public class ReminderOccurrenceImpl implements ReminderOccurrenceService {
             );
         }
 
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<ReminderOccurrence> findOccurrencesDueWithinNextMinute() {
+
+        Instant cutoff = Instant.now().plus(1, ChronoUnit.MINUTES);
+
+        return reminderOccurrenceRepository
+                .fetchBeforeMinuteReminderOccurrence(
+                        OccurrenceStatus.PENDING,
+                        cutoff
+                );
     }
 }

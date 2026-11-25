@@ -63,7 +63,21 @@ public class OnceScheduleAdapter implements ScheduleAdapter {
                 .atZone(ZoneId.of(onceSchedule.getTimeZone()))
                 .toInstant();
 
+
+        log.info("Reminder date: {}", onceSchedule.getReminderDate());
+        log.info("Reminder time: {}", onceSchedule.getReminderTime());
+        log.info("Timezone: {}", onceSchedule.getTimeZone());
+        log.info("Scheduled instant: {}", scheduledAt);
+        log.info("Current instant: {}", Instant.now());
+        log.info("Is future: {}", scheduledAt.isAfter(Instant.now()));
+
         if (!scheduledAt.isAfter(Instant.now())) {
+            log.info(
+                    "Once reminder expired. Deactivating reminder: {}",
+                    reminder.getId()
+            );
+
+            reminder.setActive(false);
             return List.of();
         }
 
