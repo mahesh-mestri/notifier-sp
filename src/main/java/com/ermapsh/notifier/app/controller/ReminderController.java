@@ -1,12 +1,16 @@
 package com.ermapsh.notifier.app.controller;
 
 import com.ermapsh.notifier.app.dto.req.CreateReminderRequest;
+import com.ermapsh.notifier.app.dto.res.PageResponse;
 import com.ermapsh.notifier.app.dto.res.ReminderResponse;
 import com.ermapsh.notifier.app.security.UserContext;
 import com.ermapsh.notifier.app.service.ReminderService;
 import com.ermapsh.notifier.common.dto.res.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +22,7 @@ public class ReminderController {
     private final ReminderService reminderService;
     private final UserContext userContext;
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<ApiResponse<ReminderResponse>> createReminder(
             @Valid @RequestBody CreateReminderRequest request) {
         ReminderResponse response = reminderService.create(
@@ -28,6 +32,21 @@ public class ReminderController {
 
         return ApiResponse.created(
                 "Reminder created successfully",
+                response
+        );
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<PageResponse<ReminderResponse>>> getAllReminders(
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC)
+            Pageable pageable) {
+        PageResponse<ReminderResponse> response = reminderService.getAllByUserId(
+                userContext.getUserId(),
+                pageable
+        );
+
+        return ApiResponse.ok(
+                "Reminders fetched successfully",
                 response
         );
     }

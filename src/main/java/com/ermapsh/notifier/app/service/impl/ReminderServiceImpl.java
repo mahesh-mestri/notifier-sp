@@ -1,6 +1,7 @@
 package com.ermapsh.notifier.app.service.impl;
 
 import com.ermapsh.notifier.app.dto.req.CreateReminderRequest;
+import com.ermapsh.notifier.app.dto.res.PageResponse;
 import com.ermapsh.notifier.app.dto.res.ReminderResponse;
 import com.ermapsh.notifier.app.entity.Reminder;
 import com.ermapsh.notifier.app.entity.Schedule;
@@ -11,10 +12,13 @@ import com.ermapsh.notifier.app.repository.UserRepository;
 import com.ermapsh.notifier.app.scheduler.ScheduleAdapterRouter;
 import com.ermapsh.notifier.app.service.ReminderService;
 import com.ermapsh.notifier.common.mapper.ReminderResponseMapper;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -63,4 +67,27 @@ public class ReminderServiceImpl implements ReminderService {
         return reminderResponseMapper.toResponse(reminder, schedule);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public PageResponse<ReminderResponse> getAllByUserId(UUID userId, Pageable pageable) {
+        Page<ReminderResponse> page = reminderRepository
+                .findAllByUserId(userId, pageable)
+                .map(this::mapToResponse); // or reminderMapper::toResponse
+
+        return PageResponse.from(page);
+    }
+
+    private ReminderResponse mapToResponse(Reminder reminder) {
+        return ReminderResponse.builder()
+                .id(reminder.getId())
+                .title(reminder.getTitle())
+                .description(reminder.getDescription())
+                .categoryId(reminder.getCategoryId())
+                .scheduleType(reminder.getScheduleType())
+                .notificationEnabled(reminder.isNotificationEnabled())
+                .active(reminder.isActive())
+                .createdAt(reminder.getCreatedAt())
+                .updatedAt(reminder.getUpdatedAt())
+                .build();
+    }
 }

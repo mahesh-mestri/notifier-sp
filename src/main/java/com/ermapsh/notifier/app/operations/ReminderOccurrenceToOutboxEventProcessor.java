@@ -6,6 +6,7 @@ import com.ermapsh.notifier.app.enums.EventAggregateType;
 import com.ermapsh.notifier.app.enums.OccurrenceStatus;
 import com.ermapsh.notifier.app.outbox.OutboxEventPublisher;
 import com.ermapsh.notifier.app.repository.ReminderOccurrenceRepository;
+import com.ermapsh.notifier.app.service.FirebaseNotificationService;
 import com.ermapsh.notifier.app.service.ReminderOccurrenceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,7 @@ public class ReminderOccurrenceToOutboxEventProcessor {
     private final ReminderOccurrenceRepository reminderOccurrenceRepository;
     private final OutboxEventPublisher outboxEventPublisher;
     private final ReminderOccurrenceService reminderOccurrenceService;
+    private final FirebaseNotificationService firebaseNotificationService;
 
     @Transactional
     public void occurrencesToOutboxEvent() {

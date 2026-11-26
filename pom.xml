@@ -126,6 +126,12 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>com.google.firebase</groupId>
+            <artifactId>firebase-admin</artifactId>
+            <version>9.12.0</version>
+        </dependency>
+
 
         <!-- ==================== Tests ==================== -->
 

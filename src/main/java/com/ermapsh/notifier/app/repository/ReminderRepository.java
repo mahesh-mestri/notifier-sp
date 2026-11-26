@@ -3,6 +3,8 @@ package com.ermapsh.notifier.app.repository;
 import com.ermapsh.notifier.app.entity.Reminder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,4 +26,6 @@ public interface ReminderRepository extends JpaRepository<Reminder, UUID> {
             UUID userId,
             String title
     );
+
+    Page<Reminder> findAllByUserId(UUID userId, Pageable pageable);
 }

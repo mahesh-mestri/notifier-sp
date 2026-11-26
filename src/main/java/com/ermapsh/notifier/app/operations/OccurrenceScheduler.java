@@ -16,12 +16,12 @@ public class OccurrenceScheduler {
     private final ReminderOccurrenceService  reminderOccurrenceService;
     private final ReminderOccurrenceToOutboxEventProcessor occurrenceToOutboxEventProcessor;
     //    @Scheduled(fixedDelay = 300000 )
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 60000)
     public void generateUpcomingOccurrences() {
         reminderOccurrenceService.generateUpcomingOccurrences();
     }
 
-    @Scheduled(fixedDelay = 1000)
+    @Scheduled(fixedDelay = 90000)
     public void occurrencesToOutboxEvent() {
         occurrenceToOutboxEventProcessor.occurrencesToOutboxEvent();
     }
